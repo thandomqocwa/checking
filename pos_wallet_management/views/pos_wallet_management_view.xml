@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<odoo>
+    <data>
+        <record id="pos_wallet_inherit_view_pos_config_form" model="ir.ui.view">
+            <field name="name">pos.config.form.view</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form" />
+            <field name="arch" type="xml">
+                <xpath expr="////div[@class='row mt16 o_settings_container'][8]" position="after">
+                    <h2>POS Wallet Management</h2>
+                    <div class="row mt16 o_settings_container" id="wk_pos_wallet">
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="Select between the option to show wallet payment method as payment method or as check box slider in POS Session">
+                            <div class="o_setting_right_pane">
+                                <label for="show_wallet_type" string="Order Reprint Type"/>
+                                <div class="text-muted">
+                                    Select Wallet Payment Method View in Session (Wallet Button)
+                                </div>
+                                <div class="content-group mt16">
+                                    <field name="show_wallet_type"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="pos_wallet_form" model="ir.ui.view">
+            <field name="name">pos.wallet</field>
+            <field name="model">pos.wallet</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button type="object"  class="btn-primary"  name="confirm_wallet" string="Confirm" help="Click to change state of the transaction" attrs="{'invisible':[('state','in',['confirm','cancel'])]}"/>
+                        <button type="action"  name="%(action_view_pos_wallet_payment)d" string="Cancel" help="Click to change state of wallet to cancel" attrs="{'invisible':[('state','=','cancel')]}"/>
+                        <field name="state"  widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name='amount'/>
+                            </group>
+                            <group>
+                                <field name='partner_id' attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="reason" attrs="{'invisible':[('state','!=','cancel')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Wallet Transactions">
+                                <field name="pos_wallet_trans_id">
+                                    <form string="Wallet Transaction">
+                                        <group>
+                                            <group>
+                                                <field name="pos_order_id" />
+                                                <field name="payment_type"/>
+                                                <field name="create_date"/>
+                                                <field name="amount"/>
+                                                <field name="trans_reason"/>
+                                                <field name="partner_id"/>
+                                                <field name="created_by"/>
+                                                <field name="wallet_id" invisible="1"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                    <tree string="Wallet Transaction">
+                                        <field name="pos_order_id"/>
+                                        <field name="created_by"/>
+                                        <field name="create_date"/>
+                                        <field name="payment_type"/>
+                                        <field name="amount"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_wallet_filter" model="ir.ui.view">
+            <field name="name">pos.wallet</field>
+            <field name="model">pos.wallet</field>
+            <field name="arch" type="xml">
+                <search string="Search Customer Wallet">
+                    <field name="partner_id"/>
+                    <filter  name="state" string="Confirmed" domain="[('state','=','confirm')]"/>
+                    <filter  name="state" string="Cancel" domain="[('state','=','cancel')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="pos_wallet_management.wallet_tree_view">
+            <field name="name">POS Wallet List</field>
+            <field name="model">pos.wallet</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="create_date"/>
+                    <field name="amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="pos_wallet_management.pos_wallet_action_window">
+            <field name="name">POS Wallet</field>
+            <field name="res_model">pos.wallet</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="pos_wallet_transaction_form_view" model="ir.ui.view">
+            <field name="name">Wallet Transaction</field>
+            <field name="model">pos.wallet.transaction</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Transaction Form view" edit="false" create="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="pos_order_id" invisible="1"/>
+                                <field name="name"/>
+                                <field name="create_date"/>
+                                <field name="created_by"/>
+                                <field name="partner_id"/>
+                                <field name="state"/>
+                            </group>
+                            <group>
+                                <field name="payment_type"/>
+                                <field name='amount'/>
+                                <field name="wallet_id"/>
+                            </group>
+                            <group>
+                                <field name="trans_reason"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="pos_wallet_form_trans_action_window">
+            <field name="name">Wallet Transaction</field>
+            <field name="res_model">pos.wallet.transaction</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="pos_wallet_transaction_tree" model="ir.ui.view">
+            <field name="name">POS Wallet Transaction</field>
+            <field name="model">pos.wallet.transaction</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree create="false">
+                    <field name='pos_order_id' invisible="1"/>
+                    <field name='name'/>
+                    <field name='create_date'/>
+                    <field name='created_by'/>
+                    <field name='partner_id'/>
+                    <field name='payment_type'/>
+                    <field name='state'/>
+                    <field name='amount'/>
+                    <field name='trans_reason'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_wallet_trans_filter" model="ir.ui.view">
+            <field name="name">POS Wallet Transaction</field>
+            <field name="model">pos.wallet.transaction</field>
+            <field name="arch" type="xml">
+                <search string="Search Customer Wallet Transaction">
+                    <field name="partner_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="pos_wallet_management.pos_wallet_trans_action_window">
+            <field name="name">POS Wallet Transaction</field>
+            <field name="res_model">pos.wallet.transaction</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="pos_wallet_management.view_wallet_trans_filter"/>
+            <field name="context">{'search_default_group_by_employee_id':0}</field>
+        </record>
+
+        <record id="view_wallet__filter" model="ir.ui.view">
+            <field name="name">pos.wallet</field>
+            <field name="model">pos.wallet</field>
+            <field name="arch" type="xml">
+                <search string="Search Customer Wallet">
+                    <field name="partner_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="pos_wallet_management.wallet_action_window">
+            <field name="name">POS Wallet</field>
+            <field name="res_model">pos.wallet</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="pos_wallet_management.wallet_tree_view"/>
+            <field name="context">{'search_default_group_by_employee_id':0}</field>
+        </record>
+
+        <record id="view_wallet_inherit_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.pos.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="point_of_sale.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="action_customer_wallet"
+                        context="{'active_id' : active_id}">
+                        <img alt="Wallet Credits" src="pos_wallet_management/static/description/wallet_form_icon.png" style="width: 24px; margin: 6px;"/>
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value">
+                                <field string="Wallet" name="wallet_credits" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </span>
+                            <span class="o_stat_text">Wallet</span>
+                        </div>
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <record id="pos_wallet_journal_form_view" model="ir.ui.view">
+            <field name="name">Pos Payment Method Form</field>
+            <field name="model">pos.payment.method</field>
+            <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name= 'wallet_method'/>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem id="pos_wallet_management.menu_root" parent="point_of_sale.menu_point_root" name='Wallet Management'/>
+        <menuitem name="Wallets" id="pos_wallet_management.menu_transaction_list" parent="pos_wallet_management.menu_root" action="pos_wallet_management.pos_wallet_action_window"/>
+    </data>
+</odoo>

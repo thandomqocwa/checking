@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+user_access_pos_wallet,user.access.pos.wallet,model_pos_wallet,point_of_sale.group_pos_user,1,1,1,0
+user_access_pos_wallet_transaction,user.access.pos.wallet.transaction,model_pos_wallet_transaction,point_of_sale.group_pos_user,1,1,1,0
+manager_access_pos_wallet,manager.access.pos.wallet,model_pos_wallet,point_of_sale.group_pos_manager,1,1,1,1
+manager_access_pos_wallet_transaction,manager.access.pos.wallet.transaction,model_pos_wallet_transaction,point_of_sale.group_pos_manager,1,1,1,1
+manager_access_pos_wallet_cancel,manager.access.pos.wallet.cancellation,model_pos_wallet_cancellation,point_of_sale.group_pos_manager,1,1,1,1

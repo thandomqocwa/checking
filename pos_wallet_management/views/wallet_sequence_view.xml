@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<odoo>
+	<data noupdate="1">
+		<record id="sequence_wallet_transfer" model="ir.sequence">
+			<field name="name">Wallet  Sequence</field>
+			<field name="code">pos.wallet</field>
+			<field name="prefix">WALLET</field>
+			<field name="padding">4</field>
+    	</record>
+	</data>
+</odoo>

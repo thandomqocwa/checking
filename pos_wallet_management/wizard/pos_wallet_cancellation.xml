@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2016-Present Webkul Software Pvt. Ltd. (<https://webkul.com/>) -->
+<!-- See LICENSE file for full copyright and licensing details. -->
+<!-- License URL : <https://store.webkul.com/license.html/> -->
+<odoo>
+    <data>
+        <record id="view_pos_wallet_payment" model="ir.ui.view">
+            <field name="name">POS Wallet Payment</field>
+            <field name="model">pos.wallet.cancellation</field>
+            <field name="arch" type="xml">
+                <form string="Wallet Payment">
+                    <group>
+                        <group>
+                          <field name="cancel_reason"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="cancel_wallet" string="Ok" type="object" class="btn-primary"/>
+                        <button special="cancel" string="Cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_view_pos_wallet_payment" model="ir.actions.act_window">
+            <field name="name">Wallet Cancellation</field>
+            <field name="res_model">pos.wallet.cancellation</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>
